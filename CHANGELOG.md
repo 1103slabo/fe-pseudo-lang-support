@@ -1,5 +1,16 @@
 # Changelog
 
+## [1.0.16] - 2026-06-13
+
+### Added
+
+- 疑似メモリビューのタイトルバーに「クリア」アイコンボタン（`$(clear-all)`）を追加
+  - デバッグコンソールの「コンソールのクリア」と同様のUI・操作感
+  - 押すとデバッグセッション開始前の初期表示状態（「デバッグを開始するとメモリが表示されます」）に戻る
+  - デバッグ中・非デバッグ中を問わず常時表示
+  - `package.json`：`fe-pseudo-lang.clearMemoryView` コマンドを追加、`view/title` メニューに登録
+  - `extension.ts`：`clearMemoryCommand` を登録し、既存の `MemoryViewProvider.clear()` を呼び出す
+
 ## [1.0.15] - 2026-06-13
 
 ### Changed
