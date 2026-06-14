@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.1.1] - 2026-06-14
+
+### Changed
+
+- `package.json` に `categories`（Education / Debuggers / Programming Languages）と `keywords` を追加し、Marketplaceでの検索性を向上
+- README.md に新規ファイル作成機能・疑似メモリクリア機能の説明を追加
+- `scripts/release-support.js` を修正し、LICENSEファイルも `fe-pseudo-lang-support` にコピー・commitするように変更
+  - これにより、support リポジトリ上のREADMEからも `LICENSE` ファイルへの参照が機能するようになる
+
 ## [1.1.0] - 2026-06-14
 
 ### Added
