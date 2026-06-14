@@ -1,5 +1,15 @@
 # Changelog
 
+## [1.1.2] - 2026-06-14
+
+### Changed
+
+- `.vscodeignore` に `.claude/**` を追加し、Claude Code のローカル設定ファイルが VSIX に同梱されないように修正
+- 疑似メモリパネルのビューコンテナID `ipa-pseudo-memory-panel` を `fe-pseudo-memory-panel` に変更
+  - `package.json` の `viewsContainers.panel[].id` と `views` のキーを更新
+- README.md のライセンス節のリンクを修正
+  - `[LICENSE]` → `[LICENSE](./LICENSE)`
+
 ## [1.1.1] - 2026-06-14
 
 ### Changed
