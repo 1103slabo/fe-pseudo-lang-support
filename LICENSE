@@ -1,24 +1,58 @@
-This is free and unencumbered software released into the public domain.
+Copyright (c) 2026 1103slabo.com Hitomi Matsuda
 
-Anyone is free to copy, modify, publish, use, compile, sell, or
-distribute this software, either in source code form or as a compiled
-binary, for any purpose, commercial or non-commercial, and by any
-means.
+FE疑似言語 教育利用ライセンス 1.0
 
-In jurisdictions that recognize copyright laws, the author or authors
-of this software dedicate any and all copyright interest in the
-software to the public domain. We make this dedication for the benefit
-of the public at large and to the detriment of our heirs and
-successors. We intend this dedication to be an overt act of
-relinquishment in perpetuity of all present and future rights to this
-software under copyright law.
+1. 適用対象
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
-IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY CLAIM, DAMAGES OR
-OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
-ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-OTHER DEALINGS IN THE SOFTWARE.
+本ライセンスは、本ソフトウェアおよび付属ファイル
+（以下「本ソフトウェア」）に適用されます。
 
-For more information, please refer to <https://unlicense.org>
+2. 許可事項
+
+個人利用および教育目的での利用に限り、
+利用者は以下の行為を無償で行うことができます。
+
+- 本ソフトウェアを使用すること
+- 本ソフトウェアを複製すること
+- 本ソフトウェアを無償で再配布すること
+- 学校、大学、学習塾、研修等で利用すること
+- 授業、教材、講習会等で利用すること
+- 学習成果や利用画面を公開すること
+
+3. 禁止事項
+
+以下の行為を禁止します。
+
+- 本ソフトウェアの改変、修正、翻案、派生物の作成
+- 改変したものを配布すること
+- 本ソフトウェアの全部または一部を他のソフトウェア、
+  拡張機能、サービス、製品等に組み込むこと
+- 本ソフトウェアを商業目的で利用すること
+- 本ソフトウェアを有償で販売すること
+- 本ソフトウェアを含む有償サービスを提供すること
+- 本ソフトウェアを再配布する際に対価を受け取ること
+- 本ライセンスで禁止されている行為を第三者に行わせること
+
+4. 著作権
+
+本ソフトウェアに関する著作権その他一切の権利は、
+1103slabo.com 所属の Hitomi Matsuda に帰属します。
+
+5. 保証の否認
+
+本ソフトウェアは現状のまま提供されます。
+
+作者は、本ソフトウェアの商品性、
+特定目的への適合性および権利非侵害について、
+明示または黙示を問わず一切保証しません。
+
+6. 免責事項
+
+本ソフトウェアの使用または使用不能に起因して生じた
+いかなる損害についても、
+作者は一切の責任を負いません。
+
+7. ライセンスの終了
+
+利用者が本ライセンスの条件に違反した場合、
+本ライセンスによって許諾された権利は自動的に失効します。
