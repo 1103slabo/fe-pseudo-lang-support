@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.2.0] - 2026-06-15
+
+### Added
+
+- ブロックコメント `/* ... */` に対応
+  - `tokenizer.ts`：行コメント（`//`）判定の前にブロックコメント判定を追加。複数行に跨る場合も `line`/`column` を正しく更新し、閉じタグ `*/` がない場合は構文エラーとする
+  - `formatter.ts`：複数行ブロックコメント中であることを示す `inBlockComment` フラグを追加し、ブロックコメント中・開始行のインデントを正しく維持
+  - `language-configuration.json`：`comments.blockComment` および `autoClosingPairs` に `/* `→`*/` を追加し、エディタのコメント切替・自動補完に対応
+
 ## [1.1.3] - 2026-06-15
 
 ### Fixed
