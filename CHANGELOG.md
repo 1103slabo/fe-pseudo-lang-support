@@ -1,5 +1,25 @@
 # Changelog
 
+## [1.3.0] - 2026-06-16
+
+### Added
+
+- 配列インデックスの 0 始まり / 1 始まり切り替え機能を追加
+  - IPA 問題文の「配列の要素番号は 0 から始まる」記述に対応
+  - `.pseudo` ファイル内に `要素番号は 0 から始まる`（全角数字「０」も可）と記述するだけで自動判別
+  - ディレクティブがない場合は従来どおり 1 始まり（既存動作に変更なし）
+  - 検出パターン：`/要素番号は\s*[0０]\s*から始まる/`
+  - 変更ファイル：
+    - `evaluator.ts`：`arrayBase` プロパティ・`setArrayBase()` / `getArrayBase()` を追加。`evaluateArrayAccess()` / `executeArrayAssignment()` / `assignToExpression()` の全インデックス計算を `this.arrayBase` 基準に変更。範囲外エラーメッセージに有効範囲（例：`有効範囲: 0 ～ 2`）を追加。`detectArrayBase()` をモジュール関数としてエクスポート
+    - `runtime.ts`：`detectArrayBase` を import し、`load()` で `setArrayBase()` を呼ぶように変更。`getArrayBase()` を公開
+    - `runCurrentFile.ts`：`detectArrayBase` を import し、`Evaluator` 生成直後に `setArrayBase()` を呼ぶように変更
+    - `pseudoDebugSession.ts`：変数ウィンドウの配列インデックスラベル（1次元・2次元）を `arrayBase` 基準に変更。`buildMemoryVars()` で `arrayBase` を `MemoryVariable` に付与
+    - `memoryViewProvider.ts`：`MemoryVariable` に `arrayBase?: 0 | 1` フィールドを追加
+    - `memoryView.js`：実体セルのインデックスラベル生成を `v.arrayBase ?? 1` 基準に変更
+- スニペットにディレクティブ入力ショートカットを追加
+  - `/* ここで，配列の要素番号は 0 から始まる */`（prefix: `array0` / `0はじまり` / `zerohajimari`）
+  - `/* ここで，配列の要素番号は 1 から始まる */`（prefix: `array1` / `1はじまり`）
+
 ## [1.2.4] - 2026-06-16
 
 ### Fixed
