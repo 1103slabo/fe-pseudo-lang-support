@@ -1,5 +1,16 @@
 # Changelog
 
+## [1.5.0] - 2026-06-17
+
+### Added
+
+- for文のデクリメント構文（`ずつ減らす`）に対応
+  - `for (i を 10 から 1 まで 1 ずつ減らす)` のような降順ループが実行可能に
+  - `tokenizer.ts`：`ずつ減らす` を `STEP_DEC` トークンとして追加（既存の `STEP` は `STEP_INC` にリネーム）
+  - `ast.ts`：`ForStatementNode` に `direction: 'inc' | 'dec'` フィールドを追加
+  - `parser.ts`：`parseForStatement()` で `STEP_INC` / `STEP_DEC` の両方を受け付けるよう変更
+  - `evaluator.ts`：`genForStatementBody()` のループ継続条件・ステップ加減算を `direction` に応じて切り替え
+
 ## [1.4.0] - 2026-06-17
 
 ### Added
