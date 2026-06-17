@@ -1,5 +1,30 @@
 # Changelog
 
+## [1.4.0] - 2026-06-17
+
+### Added
+- トレース表パネルを追加
+- トレース表にCSV出力ボタンを追加
+  - トレース表パネルの監視式バーの右端に「CSV出力」ボタンを配置
+  - テーブルの全行（ヘッダ含む）をCSVファイルとして保存可能
+  - UTF-8 BOM付き（Excelでの文字化け防止）
+  - 配列値など、カンマを含むセルは自動的にダブルクォートでエスケープ
+  - VSCodeの保存ダイアログで保存先を指定（デフォルトファイル名：`trace.csv`）
+  - テーブルが空の間はボタンを非活性（`disabled`）表示
+  - 変更ファイル：
+    - `traceView.html`：CSV出力ボタンを追加
+    - `traceView.js`：`exportCsv()` / `escapeCsvCell()` 関数を追加、ボタンの活性/非活性制御
+    - `traceView.css`：CSV出力ボタンのスタイル追加
+    - `traceViewProvider.ts`：`exportCsv` メッセージのハンドリング、`_saveCsv()` メソッド追加
+
+### Fixed
+
+- トレース表の for文行でループ変数が `-`（未定義）と表示されるバグを修正
+  - for文の初回停止時に、ループ変数の初期値がセットされる前にトレース行が記録されていた
+  - `genStatement()` で ForStatement を早期処理し、初期値セット後に yield するよう変更
+  - `genForStatement()` を `genForStatementBody()` に分割・整理し `isFirst` フラグを除去
+  - 変更ファイル：`evaluator.ts`
+
 ## [1.3.0] - 2026-06-16
 
 ### Added
