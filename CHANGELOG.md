@@ -6,11 +6,16 @@
 
 - フローチャート可視化をMermaid（CDN）から自前SVGレンダラーに完全置き換え
   - JIS X 0121準拠の図形記号に対応
-    - 端子記号（角丸矩形）：開始・終了
+    - 端子記号（角丸矩形）：開始・終了（開始ノードには関数名、関数の終了ノードには「呼び出し元へ戻る」を表示）
     - 処理記号（矩形）：代入・変数宣言
     - データ記号（平行四辺形）：出力文
-    - 判断記号（ひし形）：if条件分岐
-    - ループ端記号（台形ペア）：while・do-while・for
+    - 判断記号（ひし形）：if条件分岐（Yes/No分岐後は折れ線で合流し、1本の線で下に続く）
+    - ループ端記号（角を斜めに切り落とした六角形のペア）：while・do-while・for
+    - 定義済み処理記号（二重線矩形）：関数呼び出し
+  - 関数定義を、メインのフローチャートと横に並ぶ独立したフローチャート（開始→body→終了）として表示
+  - 矢印表記をJIS X 0121準拠に修正
+    - 通常の流れ（上→下、左→右）は矢印なしの線
+    - 逆方向（下→上）の戻り線のみ矢印を表示
   - CDN依存を完全排除（オフライン環境で動作可能）
   - CSPから外部スクリプト許可を削除
   - 新規ファイル：`src/flowchart/svgRenderer.ts`（FlowIR → SVG変換クラス）
@@ -20,8 +25,13 @@
 
 - `flowIR.ts`：`output`ノードを`io`ノード（平行四辺形）に変更
 - `flowIR.ts`：`loop`ノードに`loopType: 'while' | 'doWhile' | 'for'`を追加
+- `flowIR.ts`：`start`・`end`ノードに`label`フィールドを追加（関数名・「呼び出し元へ戻る」表示用）
+- `flowIR.ts`：`call`ノード（関数呼び出し用、定義済み処理記号）を追加
+- `flowIR.ts`：複数フローチャートを束ねる`FlowchartUnit`・`FlowchartDocument`型を追加
 - `flowchartGenerator.ts`：`PrintStatement` → `io`ノードに変更
 - `flowchartGenerator.ts`：各ループに`loopType`を付与
+- `flowchartGenerator.ts`：関数定義を抽出し、メインとは別の`FlowchartUnit`として生成するよう変更
+- `flowchartGenerator.ts`：`FunctionCall` → `call`ノードに変更
 
 ## [1.6.0] - 2026-06-17
 
