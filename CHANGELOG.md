@@ -1,5 +1,50 @@
 # Changelog
 
+## [1.7.0] - 2026-06-18
+
+### Changed
+
+- フローチャート可視化をMermaid（CDN）から自前SVGレンダラーに完全置き換え
+  - JIS X 0121準拠の図形記号に対応
+    - 端子記号（角丸矩形）：開始・終了
+    - 処理記号（矩形）：代入・変数宣言
+    - データ記号（平行四辺形）：出力文
+    - 判断記号（ひし形）：if条件分岐
+    - ループ端記号（台形ペア）：while・do-while・for
+  - CDN依存を完全排除（オフライン環境で動作可能）
+  - CSPから外部スクリプト許可を削除
+  - 新規ファイル：`src/flowchart/svgRenderer.ts`（FlowIR → SVG変換クラス）
+  - 削除ファイル：`src/flowchart/mermaidRenderer.ts`
+
+### Changed (FlowIR)
+
+- `flowIR.ts`：`output`ノードを`io`ノード（平行四辺形）に変更
+- `flowIR.ts`：`loop`ノードに`loopType: 'while' | 'doWhile' | 'for'`を追加
+- `flowchartGenerator.ts`：`PrintStatement` → `io`ノードに変更
+- `flowchartGenerator.ts`：各ループに`loopType`を付与
+
+## [1.6.0] - 2026-06-17
+
+### Added
+
+- フローチャート可視化機能を追加
+  - `.pseudo` ファイルの制御フローをMermaid形式のフローチャートとして可視化
+  - エディタ右上のアイコンボタン（`$(type-hierarchy)`）をクリックするとエディタ右側にプレビューパネルが開く（Markdown Previewと同様の左右分割表示）
+  - 対応構文：代入・変数宣言・配列宣言・if文・if-else文・while文・do-while文・for文・関数定義・関数呼び出し・出力文・return文・swap文・append文
+  - 同じパネルを再利用する設計（再実行時に新規パネルは開かない）
+  - Mermaidレンダリングはcdn.jsdelivr.net経由
+  - パースエラー時はエラーメッセージをパネル内に表示
+  - 新規ファイル追加：
+    - `src/flowchart/flowIR.ts`：AST→Mermaid変換の中間表現（IR）型定義
+    - `src/flowchart/flowchartGenerator.ts`：AST → IR変換クラス
+    - `src/flowchart/mermaidRenderer.ts`：IR → Mermaid文字列変換クラス
+    - `src/views/flowchartPanel.ts`：WebviewPanel管理クラス
+    - `src/views/flowchartPanel.html`：Webview HTMLテンプレート
+    - `src/views/flowchartPanel.css`：Webview CSS
+  - 変更ファイル：
+    - `src/extension.ts`：`fe-pseudo-lang.showFlowchart` コマンドを登録
+    - `package.json`：コマンド・`editor/title` メニューを追加
+
 ## [1.5.0] - 2026-06-17
 
 ### Added
