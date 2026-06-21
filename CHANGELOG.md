@@ -1,5 +1,19 @@
 # Changelog
 
+## [1.7.3] - 2026-06-21
+
+### Changed
+
+- PNG保存・CSV出力のデフォルトファイル名を現在開いている `.pseudo` ファイル名に統一
+  - フローチャートパネルの「PNG保存」ダイアログの初期ファイル名が `flowchart.png`（固定）から `<ファイル名>.png` に変わる
+  - トレース表の「CSV出力」ダイアログの初期ファイル名が `trace.csv`（固定）から `<ファイル名>.csv` に変わる
+  - 保存ダイアログの初期フォルダも `.pseudo` ファイルと同じフォルダを指定（毎回フォルダを辿る手間を削減）
+  - 未保存ファイル（`Untitled-1.pseudo` など）の場合はフォルダ指定なし・ファイル名のみ反映
+  - 変更ファイル：
+    - `src/views/flowchartPanel.ts`：`_document` フィールドを追加し `_update()` で保持、`_getDefaultSaveUri()` ヘルパーを追加、`_savePng()` の `defaultUri` を差し替え
+    - `src/views/traceViewProvider.ts`：`_currentFilePath` フィールド・`setCurrentFile()` メソッドを追加、`_getDefaultCsvUri()` ヘルパーを追加、`_saveCsv()` の `defaultUri` を差し替え
+    - `src/debug/pseudoDebugSession.ts`：`launchRequest()` でデバッグ開始時に `traceView?.setCurrentFile(filePath)` を呼び出すように変更
+
 ## [1.7.2] - 2026-06-21
 
 ### Added
