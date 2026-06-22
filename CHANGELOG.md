@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.7.5] - 2026-06-22
+
+### Fixed
+
+- フローチャート（分岐表現モード）のループ戻り矢印の終点を修正
+  - while・for 文：loopBack エッジの終点をひし形左頂点（`cx - DIAMOND_W, diamondMidY`）からひし形上頂点の 16px 上（`cx, y - 16`）に変更
+  - do-while 文：同様に終点を `cx, y - 16` に変更し、ひし形とボディをつなぐ縦線の上に矢印が重なるよう修正
+  - 不要になった `loopBackEndX` / `loopBackEndY` 変数および `getFirstVisualNode()` メソッドを削除
+
 ## [1.7.4] - 2026-06-22
 
 ### Changed
