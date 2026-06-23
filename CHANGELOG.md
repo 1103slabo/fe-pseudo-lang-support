@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.9.1] - 2026-06-23
+
+### Added
+- `が 未定義` / `が 未定義でない` 条件式を実装
+  - 変数が未初期化（null）かどうかを判定する条件式
+  - `tokenizer.ts`：`未定義でない` / `未定義`（`が` を含まない形）を複合キーワードとして登録（長い方を先に）。`が` は既存の `GA` トークンとして別途トークン化されるため、トークン列は `GA` + `IS_UNDEFINED`/`IS_NOT_UNDEFINED` となる
+  - `ast.ts`：`UndefinedCheckExpressionNode` を追加
+  - `parser.ts`：`parseComparisonExpression()` の GA 分岐に未定義チェック処理を追加
+  - `evaluator.ts`：`UndefinedCheckExpression` の評価を追加
+  - `flowchartGenerator.ts`：`exprToString()` に対応を追加
+  - 連結リスト系疑似言語コード（`while (current が 未定義でない)`）が実行可能になった
+
 ## [1.9.0] - 2026-06-23
 
 ### Added
