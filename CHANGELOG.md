@@ -1,5 +1,22 @@
 # Changelog
 
+## [1.9.4] - 2026-06-24
+
+### Fixed
+
+- F5 デバッグ開始時にブレークポイントが無視されて最後まで実行されてしまう問題を修正
+  - 原因：DAP 起動シーケンスで `launch` が `configurationDone` より後に処理されるケースがあり、`configurationDoneRequest` 時点で `this.sourceFile` が空文字のまま `continue` が実行されていた
+  - `configurationDoneRequest` から `continue` 呼び出しを削除
+  - `launchRequest` 末尾（`this.sourceFile` 確定後）でブレークポイントを参照して実行開始するよう変更
+    - ブレークポイントあり → `runtime.continue(bps)` でブレークポイントまで実行
+    - ブレークポイントなし → `runtime.step()` で先頭行に停止
+
+- F5 起動直後の `continue()` 呼び出しで先頭ブレークポイントがスキップされる問題を修正
+  - 原因：`runtime.continue()` の `isFirst = true`（現在行での再停止防止フラグ）が F5 起動時にも適用されており、先頭ブレークポイントの行が即座にスキップされていた
+  - `runtime.continue()` に `isInitialLaunch` パラメータを追加
+    - F5 起動時（初回実行）は `isInitialLaunch: true` を渡し `isFirst = false`（スキップなし）
+    - Continue ボタン押下時はデフォルト（`isInitialLaunch: false`）のまま `isFirst = true` で現在行の再停止を防止
+
 ## [1.9.3] - 2026-06-24
 
 ### Changed
