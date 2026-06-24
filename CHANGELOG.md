@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.9.5] - 2026-06-24
+
+### Changed
+
+- `pseudoDebugSession.ts`：`continueRequest()` に追加されていた一時デバッグログ（`[BP DEBUG]`）を削除
+
 ## [1.9.4] - 2026-06-24
 
 ### Fixed
