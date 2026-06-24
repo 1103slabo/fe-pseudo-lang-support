@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.9.7] - 2026-06-24
+
+### Fixed
+
+- ステップ実行で配列代入（`data[0] ← 10` 等）の行で止まったとき、トレース表・疑似メモリに代入前の値が表示されるバグを修正
+  - `genStatement()` の `default` ケース（`ArrayAssignment`・`PrintStatement`・`SwapStatement`・`AppendStatement` 等）を「yield → 実行」から「実行 → yield」の順序に変更
+  - v1.9.6 で `Assignment` に適用した修正と同じパターンを `default` ケースにも適用
+  - 変更ファイル：`evaluator.ts`
+
 ## [1.9.6] - 2026-06-24
 
 ### Fixed
