@@ -1,5 +1,27 @@
 # Changelog
 
+## [1.9.9] - 2026-06-29
+
+### Fixed
+
+- 関数内でステップ実行中、大域変数がトレース表・疑似メモリ・変数ウィンドウに表示されない問題を修正
+  - `evaluator.ts` の `getVariables()` がローカルスコープのみを返していた
+  - グローバルスコープとカレントスコープをマージして返すよう変更（ローカル優先）
+
+- `return` 文1つだけの関数（例：`size()`）にF11でステップインできない問題を修正
+  - `genStatement` の `default` ケースで `ReturnStatement` が yield 前に throw するため、return 行の StepInfo が出力されていなかった
+  - `genStatement` に `ReturnStatement` 専用ケースを追加し、yield → throw の順に変更
+  - 併せて `genBodyStatements` の `hasFuncCallAssign` ブランチで `genFunctionCall` を手動ループする方式に変更し、宣言行での重複停止を解消
+  - 結果：宣言行・関数内 return 行・代入後の3ステップに整理される
+
+## [1.9.8] - 2026-06-29
+
+### Fixed
+
+- 関数内でステップ実行中、大域変数がトレース表・疑似メモリ・変数ウィンドウに表示されない問題を修正
+  - `evaluator.ts` の `getVariables()` がローカルスコープのみを返していた
+  - グローバルスコープとカレントスコープをマージして返すよう変更（ローカル優先）
+
 ## [1.9.7] - 2026-06-24
 
 ### Fixed
