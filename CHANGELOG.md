@@ -1,5 +1,39 @@
 # Changelog
 
+## [1.11.3] - 2026-06-29
+
+### Fixed
+
+- `return n × factorial(n - 1)` の各再帰レベルがトレース表で上書きされ最後の1行だけ残る問題を修正
+  - v1.11.2 の「値確定後の2回目 yield」が同じ行番号を出すため、`traceView.js` の上書きロジックで前の行が削除されていた
+  - `StepInfo` に `overwrite?: boolean` フィールドを追加
+  - `genReturnStatement` の2回目 yield に `overwrite: false` を指定
+  - `traceViewProvider.ts` の `addRow()` / `traceView.js` の `addRow()` で `overwrite` フラグを受け取り、`false` のときは前の行を削除せず必ず新行を追加するよう変更
+  - for ループ等の従来の上書きモード（`overwrite: true`）は変更なし
+
+## [1.11.2] - 2026-06-29
+
+### Fixed
+
+- `return n × factorial(n - 1)` のように return 文の式中に関数呼び出しが含まれる場合のステップイン・トレース表表示を改善
+  - **ステップイン**：`genStatement` の `ReturnStatement` ケースが `executeSimpleStatement` を呼ぶため、式中の `FunctionCall` は `executeFunctionCallSync`（同期版）で実行されF11でステップインできなかった
+  - **トレース表**：再帰から戻る途中の `return n × factorial(n-1)` 行がトレース表に現れず、`factorial(1)` の `return 1` から直接 `main()` の代入行に飛んでいた
+  - `genReturnStatement()` を新設し、return値の式を `genEvaluateExpression()` でジェネレーター評価するよう変更
+  - `genEvaluateExpression()` は式ツリーを再帰走査し、`FunctionCall` ノードのみ `genFunctionCall()` でステップ展開、それ以外は `evaluateExpression()` で評価する
+  - 戻り値確定後に再度 return 行で yield することで、再帰から戻る各レベルがトレース表に表示されるようになった
+  - `applyBinaryOperator()` を新設し、評価済みの左辺・右辺に演算子を適用できるようにした
+  - `FunctionCall` を含まない return 式（`return n × 2` 等）は従来通り同期評価パスを使用
+
+## [1.11.1] - 2026-06-29
+
+### Fixed
+
+- ブレークポイント停止後にF11でステップインすると再帰関数（および戻り値あり関数への純粋な代入）内に入れない問題を修正
+  - `kekka ← factorial(4)` のような `Assignment`（VariableDeclarationなし）で右辺が関数呼び出しの場合、`genStatement` の当該ブランチに行自身の `yield` がなかった
+  - ブレークポイントで停止した時点で内部的にはすでに `genFunctionCall` の最初のStepInfoにいるため、F11の1回で関数内の次の行へ進んでしまっていた
+  - 修正：`genFunctionCall` 呼び出し前に `yield { line: stmt.line }` を追加し、その行自身で一旦停止してからF11/F10を受け付けるよう変更
+  - ステップ数：代入行（1回目）→ 関数内各行 → 代入行（2回目、値確定）の順になる
+
 ## [1.11.0] - 2026-06-29
 
 ### Added
