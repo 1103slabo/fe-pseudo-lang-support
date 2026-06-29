@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.11.4] - 2026-06-29
+
+### Fixed
+
+- `未定義の値` リテラルがパースエラーになる問題を修正
+  - `← 未定義の値` のように代入右辺に書いた場合、`未定義` が `IS_UNDEFINED` として誤マッチしていた
+  - `tokenizer.ts`：`UNDEFINED_VALUE` トークンを追加し、`'未定義の値'` を `'未定義でない'` より優先してマッチさせるよう修正
+  - `ast.ts`：`UndefinedValueLiteralNode` を追加
+  - `parser.ts`：`parsePrimaryExpression()` で `UNDEFINED_VALUE` → `UndefinedValueLiteral` ノードを生成
+  - `evaluator.ts`：`UndefinedValueLiteral` を `null` として評価
+  - `flowchartGenerator.ts`：`UndefinedValueLiteral` の表示に対応
+
 ## [1.11.3] - 2026-06-29
 
 ### Fixed
