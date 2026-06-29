@@ -1,5 +1,112 @@
 # Changelog
 
+## [1.14.0] - 2026-06-30
+
+### Added
+
+- `@include` ディレクティブで `.pclass` ファイルを読み込んでクラスを利用できるようになりました
+- 存在しないファイル・循環 include に対するエラーメッセージを追加しました
+
+## [1.13.7] - 2026-06-30
+
+### Changed
+
+- 疑似メモリ・変数ウィンドウの「(未初期化)」表示を「(未定義)」に変更
+  - IPA疑似言語の用語に合わせて表示を統一
+  - `memoryView.js`：未代入セルの表示文字列を `'(未初期化)'` → `'(未定義)'` に置換（4箇所）
+  - `pseudoDebugSession.ts`：変数ウィンドウの未代入値表示を `'(未初期化)'` → `'(未定義)'` に置換（4箇所）
+
+## [1.13.6] - 2026-06-30
+
+### Fixed
+
+- フィールド経由で到達可能なインスタンス実体ブロックを保持
+  - `pseudoDebugSession.ts`：`buildMemoryVars()` 末尾で `collectReachableInstances()` を呼び出し、変数から直接参照されていないインスタンス（`listHead.next` が指す Bノード等）を再帰的に収集して `result` に追加する
+  - `pseudoDebugSession.ts`：`collectReachableInstances()` プライベートメソッドを追加（循環参照対策の `visited` セット付き）
+  - `memoryView.js`：`buildLayout()` で `v.name === ''` のとき変数エリアのポインタセルをスキップし実体のみ描画
+  - `memoryView.js`：フィールドラベルを `v.name ? '変数名.フィールド名' : 'フィールド名'` に変更
+
+## [1.13.5] - 2026-06-30
+
+### Fixed
+
+- 変数ウィンドウでクラスインスタンスを正しく表示
+  - `pseudoDebugSession.ts`：`variablesRequest()` トップレベルにインスタンスブランチを追加し `ClassName @ 0x????` 形式で表示
+  - `pseudoDebugSession.ts`：`instance:` ハンドルの展開ブランチを追加し、フィールド一覧を表示
+
+## [1.13.4] - 2026-06-29
+
+### Fixed
+
+- インスタンスフィールド値をアドレスに解決して表示
+  - `pseudoDebugSession.ts`：`buildMemoryVars()` でフィールド値がインスタンスの場合に `fixedInstanceBodyMap` で番地（数値）に変換して `instanceFields` に渡す
+  - `memoryView.js`：`buildLayout()` でフィールドセルに `isPtr` を伝播
+  - `memoryView.js`：フィールドセル描画の `#?` フォールバックを削除し `isPtr` フラグで `fmtAddr()` 表示に切り替え
+
+## [1.13.3] - 2026-06-29
+
+### Fixed
+
+- インスタンスポインタ値を `#32` から `0x0020` 形式に変更
+  - `pseudoDebugSession.ts`：`_postTraceRow()` のインスタンス番地変換を `0x????` 形式に統一
+  - `memoryView.js`：ポインタセルの `isInstance` 描画を `fmtAddr()` に変更（`#` + value をやめる）
+  - `memoryView.js`：`renderArrows()` に `isInstance` 条件を追加し、インスタンスへの矢印を表示
+  - `traceView.js`：フォールバック表示を `0x????` に統一
+
+## [1.13.2] - 2026-06-29
+
+### Fixed
+
+- クラスインスタンスをトレース表・疑似メモリで正しく表示
+  - トレース表でインスタンス変数が `[object Object]` と表示される問題を修正（`#番地` 文字列に変換）
+  - 疑似メモリにクラスインスタンスのフィールド箱が表示されない問題を修正
+  - `pseudoDebugSession.ts`：`fixedInstanceBodyMap` を追加、`buildMemoryVars()` にインスタンス検出ロジックを追加、`_postTraceRow()` でインスタンスを番地文字列に変換
+  - `memoryViewProvider.ts`：`MemoryVariable` インタフェースに `instanceAddr` / `instanceFields` を追加
+  - `memoryView.js`：`buildLayout()` にインスタンス実体セル生成を追加、`field` kindのセル描画を追加、ポインタセルの `isInstance` 分岐を追加
+  - `traceView.js`：`fmtTraceVal()` にインスタンスオブジェクトのフォールバックガードを追加
+
+## [1.13.1] - 2026-06-29
+
+### Fixed
+
+- ドット記法メンバアクセスの出力文（`の値を出力する` / `を出力する`）に対応
+  - `curr.val の値を出力する` などがパースエラーになる問題を修正
+  - `parser.ts`：`parseIdentifierStatement()` の DOT ブランチに `NO_VALUE` / `OUTPUT` トークンのハンドルを追加
+
+## [1.13.0] - 2026-06-29
+
+### Added
+
+- クラス定義構文（`クラス〜endクラス`）を実装（クラスフェーズ2）
+  - `.pseudo` ファイル内にクラスを直接定義可能
+  - フィールド宣言（通常型・クラス型）
+  - コンストラクタ（クラス名と同名の `〇` 関数）
+  - メソッド（戻り値なし / 戻り値あり）
+  - `自身の` によるフィールド参照・代入
+  - メソッド呼び出し（`q.method(args)` 形式）
+  - コンストラクタ呼び出し（`ClassName(args)` 形式でインスタンス生成）
+  - クラス型変数宣言（`ClassName: varName`）
+  - `package.json`：`.pclass` 拡張子を `fe-pseudolang` 言語に追加（シンタックスハイライト共用）
+  - `tokenizer.ts`：`CLASS`・`END_CLASS`・`SELF` トークンを追加
+  - `ast.ts`：クラス関連ノード群・`MethodCallNode` を追加
+  - `parser.ts`：クラス定義・クラス型変数宣言・メソッド呼び出し・`自身の` パターンを追加
+  - `evaluator.ts`：`classTable`・`instanceStack` を追加、コンストラクタ / メソッド実行を実装
+  - `flowchartGenerator.ts`：クラス関連ノードのフローチャート表示に対応
+
+## [1.12.0] - 2026-06-29
+
+### Added
+
+- ドット記法（メンバアクセス・メンバへの代入）を実装（クラスフェーズ1）
+  - `prev.next` によるフィールド読み取り
+  - `prev.next ← curr` によるフィールドへの代入
+  - `prev.next が 未定義でない` など既存の未定義チェックとの組み合わせ
+  - `tokenizer.ts`：`DOT` トークンを追加
+  - `ast.ts`：`MemberAccessNode`・`MemberAssignmentNode`・`ClassInstance` を追加
+  - `parser.ts`：`parseVariableReference()` と `parseIdentifierStatement()` にドット記法パターンを追加
+  - `evaluator.ts`：`ClassInstance` 型を追加、`MemberAccess` 評価・`MemberAssignment` 実行を追加
+  - `flowchartGenerator.ts`：`MemberAccess`・`MemberAssignment` のフローチャート表示に対応
+
 ## [1.11.4] - 2026-06-29
 
 ### Fixed

@@ -149,6 +149,78 @@
 | break（ループ終了） | `繰返し処理を終了する` |
 | break（ラベル付き） | `αの行から始まる繰返し処理を終了する`（`// α` コメントが付いたループ行を終了） |
 | 大域変数 | `大域: 整数型: g` |
+| クラス定義 | `クラス ClassName` … `endクラス` |
+| インスタンス生成 | `ClassName: obj` / `obj ← ClassName(引数)` |
+| フィールドアクセス | `obj.fieldName` |
+| フィールド代入 | `obj.fieldName ← 値` |
+| 自身のフィールド参照（コンストラクタ内） | `自身のfieldName` |
+| 外部クラスファイルの読み込み | `/* @include ClassName.pclass */` |
+
+---
+
+## クラス
+
+### クラス定義
+
+`クラス`〜`endクラス` でクラスを定義します。  
+コンストラクタは `〇ClassName(引数)` として定義します。
+
+```pseudo
+クラス Point
+    整数型: x
+    整数型: y
+
+    〇Point(整数型: qX, 整数型: qY)
+        自身のx ← qX
+        自身のy ← qY
+endクラス
+
+〇main()
+    Point: p
+    p ← Point(3, 5)
+    p.x の値を出力する   // → 3
+    p.y の値を出力する   // → 5
+```
+
+フィールドの型にはプリミティブ型だけでなく、他のクラス型も指定できます（連結リストなど）。
+
+### .pclass ファイルと @include ディレクティブ
+
+クラス定義を別ファイル（拡張子 `.pclass`）に分離し、`/* @include */` で読み込めます。  
+`.pseudo` ファイルと同じディレクトリに配置してください。
+
+**ListElement.pclass**
+```pseudo
+クラス ListElement
+    文字型: val
+    ListElement: next
+
+    〇ListElement(文字型: qVal)
+        自身のval ← qVal
+endクラス
+```
+
+**main.pseudo**
+```pseudo
+/* @include ListElement.pclass */
+
+大域: ListElement: listHead ← 未定義の値
+
+〇main()
+    ListElement: node
+    node ← ListElement("A")
+    listHead ← node
+    listHead.val の値を出力する   // → A
+```
+
+複数の `.pclass` ファイルを読み込む場合は `@include` を複数行書きます。
+
+```pseudo
+/* @include NodeA.pclass */
+/* @include NodeB.pclass */
+```
+
+> **注意**：循環 `@include`（A が B を include し、B が A を include する）は検出されエラーになります。
 
 ---
 
