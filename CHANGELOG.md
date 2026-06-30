@@ -1,5 +1,19 @@
 # Changelog
 
+## [1.17.0] - 2026-06-30
+
+### Added
+
+- クラスフィールドの配列を疑似メモリで1要素1セル展開表示に対応
+  - インスタンスフィールドが配列型（1次元・2次元）の場合、従来は疑似メモリ・変数ウィンドウでまとめて1セル表示されていた
+  - 通常配列と同じ `fixedArrayBodyMap` による固定アドレス採番をフィールド配列にも適用し、実体エリアに1要素1セルで展開するよう変更
+  - フィールドセル自体はアドレス表示（`0x????`）になり、実体配列セルへの矢印が描画される
+  - 2次元配列フィールドは `[行,列]` ラベル付きで展開される
+  - 変更ファイル：
+    - `src/debug/pseudoDebugSession.ts`：`buildMemoryVars()` の `instanceFields` 構築に配列フィールド分岐を追加、フィールド配列を仮想エントリとして `result` に追加。`collectReachableInstances()` も同様に対応
+    - `src/views/memoryViewProvider.ts`：`MemoryVariable` の `instanceFields` 型に `isArrayPtr` / `arrayValue` を追加
+    - `src/views/memoryView.js`：仮想エントリのポインタセル生成をスキップ、フィールドセルに `ptrTarget` / `isArrayPtr` を付与、`renderArrows()` でフィールド配列への矢印描画を追加
+
 ## [1.16.2] - 2026-06-30
 
 ### Fixed
