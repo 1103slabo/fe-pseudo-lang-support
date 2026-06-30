@@ -1,5 +1,53 @@
 # Changelog
 
+## [1.16.2] - 2026-06-30
+
+### Fixed
+
+- クラスメソッド・コンストラクタ内の `if`/`while`/`do-while`/`for` 文が「未対応の文です」エラーになる問題を修正
+  - `executeSimpleStatement()` がメソッド・コンストラクタ本体の実行に使われているが、制御構文（`IfStatement`/`WhileStatement`/`DoWhileStatement`/`ForStatement`）の `case` が存在せず `default` 節に到達していた
+  - 既存のジェネレーター版実装（`genIfStatement` 等）を同期的に最後まで回す方式で対応（`executeFunctionCallSync` と同じパターン）
+  - `ForStatement` はループ変数の初期化処理（`from`/`to`/`step` 評価とスコープセット）を `genStatement()` の早期分岐と同じロジックで実施してから `genForStatementBody()` を呼び出す
+  - 変更ファイル：`src/interpreter/evaluator.ts`
+
+## [1.16.1] - 2026-06-30
+
+### Fixed
+
+- `@include` でクラスファイルを読み込む構成の場合、エラーメッセージにどのファイルのエラーかが表示されず判別できない問題を修正
+  - エラーメッセージの先頭に `[ファイル名]` を付与するように変更（例：`[Stack.pclass] 15行目22列: ...`）
+  - `.pclass` の読み込み・パース処理と、メインの `.pseudo` のパース・実行処理をそれぞれ個別の try-catch で囲み、catch 時にファイル名を後付けする方式で対応
+  - 変更ファイル：`src/commands/runCurrentFile.ts`、`src/debug/runtime.ts`
+  - 実行時エラー（`step()` / `stepOver()` 中に発生するもの）は今回のスコープ外（パースエラーのみ対応）
+
+## [1.16.0] - 2026-06-30
+
+### Added
+
+- 自身のフィールドに対する配列添字アクセスに対応
+  - `自身のdata[自身のtop]` のような、`自身の` プレフィックス付きフィールドへの配列インデックスアクセス（読み取り・代入）が可能に
+  - 2次元配列フィールド（`自身のgrid[i, j]`）にも対応
+  - 既存の通常配列アクセスと同じ `arrayBase`（0始まり/1始まり）・範囲外エラー処理を共有
+  - 変更ファイル：
+    - `ast.ts`：`SelfMemberAccessNode` / `SelfMemberAssignmentNode` に `indices?: ExpressionNode[]` を追加
+    - `parser.ts`：`parseVariableReference()`、一次式パース内のSELF処理、`parseSelfMemberStatement()` の3箇所に添字パース処理を追加
+    - `evaluator.ts`：配列要素の読み取り・代入ロジックを `resolveArrayElement()` / `assignArrayElement()` として共通化し、`SelfMemberAccess` / `SelfMemberAssignment`（同期版・ジェネレータ版）から呼び出すよう変更
+    - `flowchartGenerator.ts`：`exprToString()` の `SelfMemberAccess` ケースに添字表示を追加
+
+## [1.15.2] - 2026-06-30
+
+### Fixed
+
+- `return` 文の戻り値に比較式（`の値が ～ と等しい` 等の自然言語比較構文、`>` `<` `=` 等の記号比較構文）を直接書くとパースエラーになる問題を修正しました
+  - `parseReturnStatement()` の戻り値パースを `parseExpression()`（加減乗除のみ）から `parseConditionExpression()`（比較・論理演算を含む）に変更
+  - `isEmpty()` のように論理型を返す関数で `return 自身のtop の値が 0 と等しい` のような比較式をそのまま返せるようになりました
+
+## [1.15.1] - 2026-06-30
+
+### Fixed
+
+- 条件式で `の値` フレーズを使った比較（`x の値 が 0 と等しい` 等）がパースエラーになる問題を修正しました
+
 ## [1.15.0] - 2026-06-30
 
 ### Added
