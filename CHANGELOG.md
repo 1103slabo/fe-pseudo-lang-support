@@ -1,5 +1,23 @@
 # Changelog
 
+## [1.18.0] - 2026-07-01
+
+### Added
+
+- 日本語比較フレーズ（より大きい/より小さい/以上/以下）を追加
+  - `x が y より大きい`（`>`）、`x が y より小さい`（`<`）、`x が y 以上`（`≧`）、`x が y 以下`（`≦`）の自然言語比較構文に対応
+  - `の値` 付きバリエーション（`x の値が y の値より大きい` 等）にも対応
+  - いずれも既存の `BinaryExpression` ノードを生成するのみのため、evaluator・flowchartGenerator の変更は不要
+  - 変更ファイル：
+    - `src/interpreter/tokenizer.ts`：`GT_PHRASE`/`LT_PHRASE`/`GTE_PHRASE`/`LTE_PHRASE` トークンタイプと `より大きい`/`より小さい`/`以上`/`以下` キーワードを追加
+    - `src/interpreter/parser.ts`：`parseComparisonExpression()` の `GA` 分岐に4フレーズの判定を追加
+
+### Fixed
+
+- 「が ～ と等しい」等の比較フレーズで、右辺にも `の値` が付く場合（`a の値が b の値より大きい` 等）にパースエラーになる問題を修正
+  - `の値` の読み飛ばしが `が` の左側にしか実装されておらず、右辺の式パース後にも読み飛ばしが必要だった
+  - 変更ファイル：`src/interpreter/parser.ts`
+
 ## [1.17.0] - 2026-06-30
 
 ### Added
