@@ -1,5 +1,19 @@
 # Changelog
 
+## [1.19.0] - 2026-07-06
+
+### Added
+
+- 自身のフィールド配列に対する「の要素数」対応
+  - `自身のscore の要素数` / `自身のscoreの要素数`（スペースあり・なし両対応）のような、`自身の` プレフィックス付きフィールドの要素数取得が可能に
+  - for文の範囲式、代入右辺、比較式、出力文など式が書ける場所全般で利用可能
+  - 既存の `ArrayLength` ノードに `isSelf` フラグを追加する形で、通常配列と評価・表示ロジックを共有
+  - 変更ファイル：
+    - `src/interpreter/ast.ts`：`ArrayLengthNode` に `isSelf?: boolean` を追加
+    - `src/interpreter/parser.ts`：一次式パース内SELF処理（2箇所）、`parseSelfMemberStatement()` に `ARRAY_LENGTH` 分岐を追加
+    - `src/interpreter/evaluator.ts`：`evaluateArrayLength()` に自身のフィールド解決分岐を追加
+    - `src/flowchart/flowchartGenerator.ts`：`exprToString()` の `ArrayLength` ケースに `isSelf` 対応を追加
+
 ## [1.18.0] - 2026-07-01
 
 ### Added
