@@ -1,5 +1,19 @@
 # Changelog
 
+## [1.20.0] - 2026-07-06
+
+### Added
+
+- 自身のメソッド呼び出し（`自身のmethodName(...)`）に対応
+  - クラスのメソッド／コンストラクタ内から、同じクラスの別メソッドを `自身の` プレフィックス付きで呼び出せるように
+  - 式中（`return 自身のsumScore() ÷ ...` 等）・単独文としての呼び出しの両方に対応
+  - 無修飾でのメソッド呼び出し（`sumScore()`）は既存の設計方針（`自身の` によるフィールド／ローカル変数の曖昧さ回避）に合わせ、意図的に非対応のまま
+  - 変更ファイル：
+    - `src/interpreter/ast.ts`：`SelfMethodCallNode` を追加
+    - `src/interpreter/parser.ts`：一次式内 `SELF` 処理・`parseSelfMemberStatement()` に `LPAREN` 分岐を追加
+    - `src/interpreter/evaluator.ts`：`evaluateExpression()` / `executeSimpleStatement()` に `SelfMethodCall` 対応を追加
+    - `src/flowchart/flowchartGenerator.ts`：`exprToString()` および文レベル変換に `SelfMethodCall` 表示を追加
+
 ## [1.19.3] - 2026-07-06
 
 ### Fixed
