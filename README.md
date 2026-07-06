@@ -5,7 +5,6 @@
 > This is an unofficial tool. Not affiliated with IPA (Information-technology Promotion Agency, Japan).
 
 基本情報技術者試験で使用される疑似言語を、VSCode上で実行・デバッグできる拡張機能です。
-
 試験の過去問や練習問題を「実際に動かしながら」学習できます。
 
 注意：非公式な個人的に作成されているアプリです。そのため、ソースコードは公開しておりません。
