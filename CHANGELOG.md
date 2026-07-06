@@ -1,5 +1,38 @@
 # Changelog
 
+## [1.19.3] - 2026-07-06
+
+### Fixed
+
+- `9 の正の平方根の整数部分` のように、数値リテラル・括弧式・配列アクセスなど識別子以外のプライマリ式に対して `の正の平方根の整数部分` を使うと構文エラーになる問題を修正
+  - `parser.ts`：`SQRT_FLOOR` トークンのチェックが `IDENTIFIER` 分岐の中にのみ実装されていたのが原因
+  - `parsePrimaryExpression()` を「プライマリ式をパースした後、共通で後置構文をチェックする」薄いラッパーに変更し、既存の実装は `parsePrimaryExpressionInner()` にリネーム
+  - 副次効果：識別子だけでなく、数値リテラル・括弧式・配列アクセス・`自身の` フィールド参照など、あらゆるプライマリ式の後ろで `の正の平方根の整数部分` が使えるようになった
+  - 今後、絶対値・切り捨てなど同種の後置系組み込み構文を追加する際も、この1箇所に追記するだけで対応可能
+
+## [1.19.2] - 2026-07-06
+
+### Changed
+
+- 組み込み関数の実装を `builtins/` フォルダのレジストリ方式に整理
+  - 新規：`src/interpreter/builtins/types.ts`（`BuiltinFunction` インターフェース定義）
+  - 新規：`src/interpreter/builtins/math.ts`（`__sqrtFloor__` を移設）
+  - 新規：`src/interpreter/builtins/index.ts`（`builtinRegistry` を集約）
+  - `evaluator.ts`：`genFunctionCall()` 内のハードコードされた `__sqrtFloor__` 分岐をレジストリ参照に置き換え
+  - `evaluator.ts`：`PseudoValue` 型を `export` に変更（builtinsモジュールからの型参照のため）
+  - 副次効果：組み込み関数の引数個数チェックが追加された（安全性向上、既存の書き方への影響なし）
+  - 今後、絶対値・切り捨てなどの組み込み関数は `builtins/math.ts` へ、文字列操作関数は新設する `builtins/string.ts` へ追加するだけで対応可能になった
+
+## [1.19.1] - 2026-07-06
+
+### Changed
+
+- 関数呼び出しの同期版（`executeFunctionCallSync`）とジェネレーター版（`genFunctionCall`）の重複を解消
+  - `executeFunctionCallSync` を `genFunctionCall` のジェネレーターを最後まで回すだけの薄いラッパーに変更
+  - 組み込み関数チェック（`__sqrtFloor__`）・関数存在チェック・引数個数チェック・スコープ管理を `genFunctionCall` 側の1箇所に一本化
+  - 未使用となった `genFunctionCallBody()` を削除
+  - 副次効果：従来 `executeFunctionCallSync` は本体実行に `genFunctionCallBody`（同一行の複数文特殊処理なし）を使用していたが、`genFunctionCall` と同じ `genBodyStatements`（特殊処理あり）に統一されたことで、通常実行とステップ実行の挙動の食い違いを解消
+
 ## [1.19.0] - 2026-07-06
 
 ### Added
